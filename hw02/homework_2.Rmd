@@ -26,7 +26,7 @@ prostate_test <- prostate %>%
   select(-train)
 
 ## correlation of all variables in prostate data set
-cor(prostate)
+prostate_train %>% select(-lpsa) %>% cor(method = "pearson")
 ```
 
 ```{r}
