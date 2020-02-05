@@ -31,7 +31,7 @@ prostate_train %>% select(-lpsa) %>% cor(method = "pearson")
 
 ```{r}
 ## predict lpsa consider all other predictors
-## lm fits using L2 loss
+## linear model
 fit <- lm(lpsa ~ ., data=prostate_train)
 
 ## functions to compute testing/training error w/lm
@@ -39,6 +39,11 @@ L2_loss <- function(y, yhat)
   (y-yhat)^2
 error <- function(dat, fit, loss=L2_loss)
   mean(loss(dat$lpsa, predict(fit, newdata=dat)))
+## train_error 
+print(paste0("training error (lin model w/least squares): ",error(prostate_train, fit)))
+## testing error
+print(paste0("test error (lin model w/least squares): ",error(prostate_test, fit)))
+
 ```
 
 ```{r}
@@ -51,6 +56,9 @@ y_out <- prostate_train$lpsa
 fit <- glmnet(x=x_inp, y=y_out, lambda=seq(0.5, 0, -0.05))
 print(fit$beta)
 
+## loss function
+L2_loss <- function(y, yhat)
+  (y-yhat)^2
 ## functions to compute testing/training error with glmnet
 error <- function(dat, fit, lam, form, loss=L2_loss) {
   x_inp <- model.matrix(form, data=dat)
