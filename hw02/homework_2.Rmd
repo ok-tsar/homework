@@ -53,12 +53,10 @@ print(paste0("test error (lin model w/least squares): ",error(prostate_test, fit
 form  <- lpsa ~ 0 + lcavol + lweight + age + lbph + lcp + pgg45 + svi + gleason
 x_inp <- model.matrix(form, data=prostate_train)
 y_out <- prostate_train$lpsa
-fit <- glmnet(x=x_inp, y=y_out, lambda=seq(0.5, 0, -0.05))
+fit <- glmnet(x=x_inp, y=y_out, lambda=seq(0.5, 0, -0.05), alpha = 0)
 print(fit$beta)
 
-## loss function
-L2_loss <- function(y, yhat)
-  (y-yhat)^2
+
 ## functions to compute testing/training error with glmnet
 error <- function(dat, fit, lam, form, loss=L2_loss) {
   x_inp <- model.matrix(form, data=dat)
