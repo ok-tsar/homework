@@ -47,7 +47,7 @@ print(paste0("test error (lin model w/least squares): ",error(prostate_test, fit
 ```
 
 ```{r}
-## use glmnet to fit lasso
+## use glmnet to fit ridge
 ## glmnet fits using penalized L2 loss
 ## first create an input matrix and output vector
 form  <- lpsa ~ 0 + lcavol + lweight + age + lbph + lcp + pgg45 + svi + gleason
