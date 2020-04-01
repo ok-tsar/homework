@@ -46,7 +46,7 @@ vowel.rf.default
 ```{r func_setting}
 # 5-fold cross-validation setup
 # set seed for reproducibility
-set.seed(13)
+set.seed(15)
 y_flds  <- createFolds(vowel.train$y, k=5)
 prediction.5fld <- NA
 
@@ -86,7 +86,7 @@ cvvowelclass <- function(flds = y_flds, num_par = num_par, nd_size = nd_size) {
 
 ```{r param_tuning}
 # seting desired param possibilites
-num_vars_rand_smpld <- c(2,3,4,5)
+num_vars_rand_smpld <- c(3,4,5)
 min_size_trmnl_nodes <- c(1,5,10,20,40,80)
 # creating grid of possible param combinations
 tuning_grid <- expand.grid(num_vars_rand_smpld, min_size_trmnl_nodes, misclass_err = NA_real_)
@@ -110,15 +110,15 @@ ggplot(data=tuning_grid, aes(x=Var1, y=misclass_err, group=Var2)) +
                          colour = "minimum size of \nterminal nodes", 
                          title = "tuneing parameters")
 ```
-* the lowest missclassification error (0.04166667) is when the number of vars sampled as candidates at each split is 2 and the minimum size of terminal nodes is 1. This is the simplest model of all built.
+* the lowest missclassification error (0.03030303) is when the number of vars sampled as candidates at each split is 3 and the minimum size of terminal nodes is 1. This is the simplest model of all built.
 
 5. With the tuned model, make predictions using the majority vote method, and compute the misclassification rate using the ‘vowel.test’ data.
 ```{r test_missclass_err}
 # set seed for reproducibility 
-set.seed(13)
+set.seed(15)
 # random forest with identified tuning parameter values above
 vowel.rf.test <- randomForest(vowel.train[-1],  as.factor(vowel.train$y),  
-                              mtry = 2, nodesize = 1)
+                              mtry = 3, nodesize = 1)
 # predict on test set
 pred.test <- data.frame(predict(vowel.rf.test, vowel.test))
 # calculate misclassifcation error
@@ -126,4 +126,4 @@ test_err <- (1 - sum(pred.test[,1] == vowel.test[,1])/nrow(pred.test))
 print(paste("Test Misclassification Error: ", test_err))
 ```
 
-The test missclassifcation rate (0.393939) is pretty high compared to the validation misclassification rate. But this is expected. It is also interesting that the simplest model does the best job. This also makes sence as random forest models work better with many weak learners!
+The test missclassifcation rate (0.417748) is pretty high compared to the validation misclassification rate. But this is expected. It is also interesting that the simplest model does the best job. This also makes sence as random forest models work better with many weak learners!
